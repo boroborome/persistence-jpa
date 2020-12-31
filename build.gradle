@@ -1,0 +1,38 @@
+
+group = 'com.happy3w'
+version = '0.0.1'
+ext {
+	artifactId = "persistence-jpa"
+
+	upload = 'enable'
+	description = "A helpfull tools to access db by spring jpa."
+	url = 'https://github.com/boroborome/persistence-jpa'
+	developerConnection = 'scm:git@github.com:boroborome/persistence-jpa.git'
+}
+
+apply plugin: 'java-library'
+
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+	compileOnly 'org.projectlombok:lombok:1.18.12'
+	api 'jakarta.persistence:jakarta.persistence-api:2.2.3'
+	api 'com.happy3w:persistence-core:0.0.5'
+//	api project(":persistence-core")
+
+	implementation 'org.slf4j:slf4j-api:1.7.25'
+	implementation 'com.alibaba:fastjson:1.2.29'
+
+	annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+	testImplementation 'junit:junit:4.12'
+	testCompileOnly 'org.projectlombok:lombok:1.18.2'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+}
+
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
