@@ -16,6 +16,7 @@ public class JpaTranslateAssistant implements ITranslateAssistant {
         INSTANCE.regist(new EqualTranslator());
         INSTANCE.regist(new InTranslator());
         INSTANCE.regist(new NumRangeTranslator());
+        INSTANCE.regist(new DateTimeRangeTranslator());
     }
 
     private ConfigManager<AbstractFilterTranslator> translateManager = ConfigManager.inherit();
