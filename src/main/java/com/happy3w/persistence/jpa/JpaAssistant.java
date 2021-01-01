@@ -51,7 +51,7 @@ public class JpaAssistant implements IDbAssistant {
     public <T> Stream<T> queryStream(Class<T> dataType, List<IFilter> filters, QueryOptions options) {
         TypedQuery<T> query = createQuery(entityManager, dataType, filters);
 
-        if (options.getMaxSize() > 0) {
+        if (options != null && options.getMaxSize() > 0) {
             query.setMaxResults((int) options.getMaxSize());
         }
         return query.getResultStream()
