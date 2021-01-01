@@ -59,10 +59,7 @@ public class JpaAssistant implements IDbAssistant {
                 .stream();
     }
 
-    public <T> TypedQuery<T> createQuery(
-            EntityManager entityManager,
-            Class<T> dataType,
-            List<IFilter> filterList) {
+    public <T> TypedQuery<T> createQuery(EntityManager entityManager, Class<T> dataType, List<IFilter> filterList) {
         RetrievalContext<T> context = RetrievalContext.retrievalContext(entityManager, dataType);
 
         return createQueryWithParam(filterList, entityManager, context);
