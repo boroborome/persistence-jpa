@@ -5,16 +5,17 @@ import com.happy3w.persistence.core.assistant.QueryOptions;
 import com.happy3w.persistence.core.filter.IFilter;
 import com.happy3w.persistence.jpa.context.ParameterContext;
 import com.happy3w.persistence.jpa.context.RetrievalContext;
+import com.happy3w.persistence.jpa.translator.JpaTranslateAssistant;
 import com.happy3w.toolkits.utils.ListUtils;
 import com.happy3w.toolkits.utils.Pair;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,6 +24,10 @@ import java.util.stream.Stream;
 public class JpaAssistant implements IDbAssistant {
     @Getter
     private final EntityManager entityManager;
+
+    @Getter
+    @Setter
+    private JpaTranslateAssistant translateAssistant = JpaTranslateAssistant.INSTANCE;
 
     public JpaAssistant(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -64,7 +69,7 @@ public class JpaAssistant implements IDbAssistant {
     }
 
     private <T> TypedQuery createQueryWithParam(List<IFilter> filterList, EntityManager entityManager, ParameterContext<T, ?> context) {
-        List<Predicate> allPredicates = createAllPredicatesCriteriaAble(filterList, context);
+        List<Predicate> allPredicates = translateAssistant.translate(filterList, context);
 
         if (!ListUtils.isEmpty(allPredicates)) {
             context.getCriteriaQuery().where(allPredicates.toArray(new Predicate[allPredicates.size()]));
@@ -80,32 +85,5 @@ public class JpaAssistant implements IDbAssistant {
                 typeQuery.setParameter(parameterExpressionPair.getKey(), parameterExpressionPair.getValue());
             }
         }
-    }
-
-    private <T> List<Predicate> createAllPredicatesCriteriaAble(
-            List<IFilter> filterList,
-            ParameterContext context) {
-        List<Predicate> allPredicates = null;
-        if (!ListUtils.isEmpty(filterList)) {
-            allPredicates = createAllPredicatesByCriteria(filterList, context);
-        }
-        return allPredicates;
-    }
-
-    private <T> List<Predicate> createAllPredicatesByCriteria(
-            List<IFilter> filterList,
-            ParameterContext context) {
-        List<Predicate> allPredicates = new ArrayList<>();
-//        for (IFilter criteria : filterList) {
-//            IJpaCriteriaProcessor sqlCriteriaBuilder = findCriteriaBuilder(criteria.getClass());
-//            if (sqlCriteriaBuilder == null) {
-//                throw new UnsupportedOperationException("Unsupported criteria:" + criteria.getClass());
-//            }
-//            List<Predicate> newPredicates = sqlCriteriaBuilder.toPredicate(criteria, context);
-//            if (!ListUtils.isEmpty(newPredicates)) {
-//                allPredicates.addAll(newPredicates);
-//            }
-//        }
-        return allPredicates;
     }
 }
