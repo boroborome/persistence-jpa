@@ -9,13 +9,13 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 
-public class RangeTranslator extends AbstractFilterTranslator<AbstractRangeFilter> {
-    protected RangeTranslator() {
-        super(AbstractRangeFilter.class);
+public abstract class AbstractRangeTranslator<DT, FT extends AbstractRangeFilter<DT>> extends AbstractFilterTranslator<FT> {
+    protected AbstractRangeTranslator(Class<FT> filterType) {
+        super(filterType);
     }
 
     @Override
-    public Predicate translate(AbstractRangeFilter filter, ParameterContext<?, ?> context) {
+    public Predicate translate(FT filter, ParameterContext<?, ?> context) {
         CriteriaBuilder cb = context.getCriteriaBuilder();
 
         Path criteriaField = context.getRoot().get(filter.getField());
@@ -42,8 +42,9 @@ public class RangeTranslator extends AbstractFilterTranslator<AbstractRangeFilte
         return combinePredicate;
     }
 
-    private Predicate createEndPredicate(AbstractRangeFilter filter, Path criteriaField, CriteriaBuilder cb, ParameterContext<?, ?> context) {
-        ParameterExpression endExp = createParameterExpression(filter.getEnd(), criteriaField.getJavaType(), context);
+    private Predicate createEndPredicate(FT filter, Path criteriaField, CriteriaBuilder cb, ParameterContext<?, ?> context) {
+        Object endValue = adjustEndValue(filter.getEnd(), context);
+        ParameterExpression endExp = createParameterExpression(endValue, criteriaField.getJavaType(), context);
 
         Predicate endPredicate = null;
         if (endExp != null) {
@@ -56,8 +57,9 @@ public class RangeTranslator extends AbstractFilterTranslator<AbstractRangeFilte
         return endPredicate;
     }
 
-    private Predicate createStartPredicate(AbstractRangeFilter filter, Path criteriaField, CriteriaBuilder cb, ParameterContext<?, ?> context) {
-        ParameterExpression startExp = createParameterExpression(filter.getStart(), criteriaField.getJavaType(), context);
+    private Predicate createStartPredicate(FT filter, Path criteriaField, CriteriaBuilder cb, ParameterContext<?, ?> context) {
+        Object startValue = adjustStartValue(filter.getStart(), context);
+        ParameterExpression startExp = createParameterExpression(startValue, criteriaField.getJavaType(), context);
 
         Predicate startPredicate = null;
         if (startExp != null) {
@@ -82,4 +84,7 @@ public class RangeTranslator extends AbstractFilterTranslator<AbstractRangeFilte
         return context.newParameter(
                 TypeConverter.INSTANCE.convert(value, expectValueType));
     }
+
+    protected abstract Object adjustStartValue(DT filterStart, ParameterContext<?, ?> context);
+    protected abstract Object adjustEndValue(DT filterEnd, ParameterContext<?, ?> context);
 }
