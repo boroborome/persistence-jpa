@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.dataset.ReplacementDataSetLoader;
+import com.happy3w.persistence.core.filter.impl.DateRangeFilter;
+import com.happy3w.persistence.core.filter.impl.MonthRangeFilter;
 import com.happy3w.persistence.core.filter.impl.StringEqualFilter;
 import com.happy3w.persistence.jpa.app.TestApplication;
 import com.happy3w.persistence.jpa.app.entity.CompanyEntity;
@@ -22,6 +24,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,6 +70,55 @@ public class JpaAssistantTest {
                 .collect(Collectors.toList());
 
         Assert.assertEquals("[{\"catalog\":\"CN\",\"id\":\"hw\",\"name\":\"HW\"}]", JSON.toJSONString(result));
+    }
+
+    @Test
+    public void should_query_by_month_success() {
+        givenDataConfigedDate();
+
+        List<CompanyEntity> monthResult = assistant.queryStream(CompanyEntity.class, Arrays.asList(
+                new MonthRangeFilter("favoriteDate", "2020-08", null, true, false, true)
+        ), null)
+                .collect(Collectors.toList());
+
+        Assert.assertEquals("[{\"catalog\":\"AM\",\"favoriteDate\":1596254400000,\"id\":\"cs\",\"name\":\"CS\"},{\"catalog\":\"EN\",\"favoriteDate\":1598932800000,\"id\":\"sc\",\"name\":\"SC\"}]",
+                JSON.toJSONString(monthResult));
+    }
+
+    @Test
+    public void should_query_by_date_success() {
+        givenDataConfigedDate();
+
+        List<CompanyEntity> dateResult = assistant.queryStream(CompanyEntity.class, Arrays.asList(
+                new DateRangeFilter("favoriteDate", null, "2020-08-03", true, false, true)
+        ), null)
+                .collect(Collectors.toList());
+
+        Assert.assertEquals("[{\"catalog\":\"CN\",\"favoriteDate\":1593576000000,\"id\":\"hw\",\"name\":\"HW\"},{\"catalog\":\"AM\",\"favoriteDate\":1596254400000,\"id\":\"cs\",\"name\":\"CS\"}]",
+                JSON.toJSONString(dateResult));
+    }
+
+    private void givenDataConfigedDate() {
+        assistant.saveStream(Stream.of(
+                CompanyEntity.builder()
+                        .id("hw")
+                        .name("HW")
+                        .catalog("CN")
+                        .favoriteDate(Timestamp.valueOf("2020-07-01 12:00:00"))
+                        .build(),
+                CompanyEntity.builder()
+                        .id("cs")
+                        .name("CS")
+                        .catalog("AM")
+                        .favoriteDate(Timestamp.valueOf("2020-08-01 12:00:00"))
+                        .build(),
+                CompanyEntity.builder()
+                        .id("sc")
+                        .name("SC")
+                        .catalog("EN")
+                        .favoriteDate(Timestamp.valueOf("2020-09-01 12:00:00"))
+                        .build()
+        ));
     }
 
     @Getter

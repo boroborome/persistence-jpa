@@ -3,19 +3,19 @@ package com.happy3w.persistence.jpa.translator;
 import com.happy3w.persistence.core.filter.impl.NumRangeFilter;
 import com.happy3w.persistence.jpa.context.ParameterContext;
 
-public class NumRangeTranslator extends AbstractRangeTranslator<Number, NumRangeFilter<Number>> {
+public class NumRangeTranslator extends AbstractRangeTranslator<NumRangeFilter> {
 
     protected NumRangeTranslator() {
-        super((Class<NumRangeFilter<Number>>) (Class<?>) NumRangeFilter.class);
+        super(NumRangeFilter.class);
     }
 
     @Override
-    protected Object adjustStartValue(Number filterStart, ParameterContext<?, ?> context) {
-        return filterStart;
+    protected Object adjustStartValue(NumRangeFilter filter, ParameterContext<?, ?> context) {
+        return filter.getStart();
     }
 
     @Override
-    protected Object adjustEndValue(Number filterEnd, ParameterContext<?, ?> context) {
-        return filterEnd;
+    protected Object adjustEndValue(NumRangeFilter filter, ParameterContext<?, ?> context) {
+        return filter.getEnd();
     }
 }

@@ -7,6 +7,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public abstract class ParameterContext<T, R> {
     protected List<Pair<ParameterExpression, Object>> parameterList = new ArrayList<>();
 
     protected CriteriaQuery<R> criteriaQuery;
+    protected ZoneId zoneId;
 
     public ParameterExpression newParameter(Object value) {
         ParameterExpression parameter = criteriaBuilder.parameter(value.getClass());

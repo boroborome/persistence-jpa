@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -26,14 +27,18 @@ public class CompanyEntity implements Serializable {
     private String id;
 
     @Basic
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
     @Basic
-    @Column(name="website")
+    @Column(name = "website")
     private String website;
 
     @Basic
-    @Column(name="catalog")
+    @Column(name = "catalog")
     private String catalog;
+
+    @Basic
+    @Column(name = "favoriteDate")
+    private Date favoriteDate;
 }

@@ -9,7 +9,7 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 
-public abstract class AbstractRangeTranslator<DT, FT extends AbstractRangeFilter<DT>> extends AbstractFilterTranslator<FT> {
+public abstract class AbstractRangeTranslator<FT extends AbstractRangeFilter> extends AbstractFilterTranslator<FT> {
     protected AbstractRangeTranslator(Class<FT> filterType) {
         super(filterType);
     }
@@ -43,7 +43,13 @@ public abstract class AbstractRangeTranslator<DT, FT extends AbstractRangeFilter
     }
 
     private Predicate createEndPredicate(FT filter, Path criteriaField, CriteriaBuilder cb, ParameterContext<?, ?> context) {
-        Object endValue = adjustEndValue(filter.getEnd(), context);
+        if (filter.getEnd() == null) {
+            return null;
+        }
+        Object endValue = adjustEndValue(filter, context);
+        if (endValue == null) {
+            return null;
+        }
         ParameterExpression endExp = createParameterExpression(endValue, criteriaField.getJavaType(), context);
 
         Predicate endPredicate = null;
@@ -58,7 +64,13 @@ public abstract class AbstractRangeTranslator<DT, FT extends AbstractRangeFilter
     }
 
     private Predicate createStartPredicate(FT filter, Path criteriaField, CriteriaBuilder cb, ParameterContext<?, ?> context) {
-        Object startValue = adjustStartValue(filter.getStart(), context);
+        if (filter.getStart() == null) {
+            return null;
+        }
+        Object startValue = adjustStartValue(filter, context);
+        if (startValue == null) {
+            return null;
+        }
         ParameterExpression startExp = createParameterExpression(startValue, criteriaField.getJavaType(), context);
 
         Predicate startPredicate = null;
@@ -85,6 +97,6 @@ public abstract class AbstractRangeTranslator<DT, FT extends AbstractRangeFilter
                 TypeConverter.INSTANCE.convert(value, expectValueType));
     }
 
-    protected abstract Object adjustStartValue(DT filterStart, ParameterContext<?, ?> context);
-    protected abstract Object adjustEndValue(DT filterEnd, ParameterContext<?, ?> context);
+    protected abstract Object adjustStartValue(FT filter, ParameterContext<?, ?> context);
+    protected abstract Object adjustEndValue(FT filter, ParameterContext<?, ?> context);
 }
