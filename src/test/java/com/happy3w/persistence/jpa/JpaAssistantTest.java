@@ -87,7 +87,7 @@ public class JpaAssistantTest {
                         .build()
         ));
 
-        List<CompanyEntity> result = assistant.queryStream(CompanyEntity.class, Arrays.asList(
+        List<CompanyEntity> result = assistant.findByFilter(CompanyEntity.class, Arrays.asList(
                 new StringEqualFilter("name", "HW")
         ), null)
                 .collect(Collectors.toList());
@@ -96,10 +96,21 @@ public class JpaAssistantTest {
     }
 
     @Test
+    public void should_delete_by_month_success() {
+        givenDataConfigedDate();
+
+        long size = assistant.deleteByFilter(CompanyEntity.class, Arrays.asList(
+                new MonthRangeFilter("favoriteDate", "2020-08", null, true, false, true)
+        ), null);
+
+        Assert.assertEquals(2, size);
+    }
+
+    @Test
     public void should_query_by_month_success() {
         givenDataConfigedDate();
 
-        List<CompanyEntity> monthResult = assistant.queryStream(CompanyEntity.class, Arrays.asList(
+        List<CompanyEntity> monthResult = assistant.findByFilter(CompanyEntity.class, Arrays.asList(
                 new MonthRangeFilter("favoriteDate", "2020-08", null, true, false, true)
         ), null)
                 .collect(Collectors.toList());
@@ -112,7 +123,7 @@ public class JpaAssistantTest {
     public void should_query_by_date_success() {
         givenDataConfigedDate();
 
-        List<CompanyEntity> dateResult = assistant.queryStream(CompanyEntity.class, Arrays.asList(
+        List<CompanyEntity> dateResult = assistant.findByFilter(CompanyEntity.class, Arrays.asList(
                 new DateRangeFilter("favoriteDate", null, "2020-08-03", true, false, true)
         ), null)
                 .collect(Collectors.toList());
@@ -125,7 +136,7 @@ public class JpaAssistantTest {
     public void should_query_by_like_success() {
         givenDataConfigedDate();
 
-        List<CompanyEntity> dateResult = assistant.queryStream(CompanyEntity.class, Arrays.asList(
+        List<CompanyEntity> dateResult = assistant.findByFilter(CompanyEntity.class, Arrays.asList(
                 new StringLikeFilter("name", "C")
         ), null)
                 .collect(Collectors.toList());

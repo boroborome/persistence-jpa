@@ -3,25 +3,22 @@ package com.happy3w.persistence.jpa;
 import com.happy3w.persistence.core.assistant.IDbAssistant;
 import com.happy3w.persistence.core.assistant.QueryOptions;
 import com.happy3w.persistence.core.filter.IFilter;
-import com.happy3w.persistence.jpa.context.ParameterContext;
+import com.happy3w.persistence.jpa.context.DeleteContext;
 import com.happy3w.persistence.jpa.context.RetrievalContext;
 import com.happy3w.persistence.jpa.translator.JpaTranslateAssistant;
-import com.happy3w.toolkits.utils.ListUtils;
-import com.happy3w.toolkits.utils.Pair;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public class JpaAssistant implements IDbAssistant {
+public class JpaAssistant implements IDbAssistant<Object> {
     @Getter
     private final EntityManager entityManager;
 
@@ -53,8 +50,9 @@ public class JpaAssistant implements IDbAssistant {
 
     @Transactional
     @Override
-    public <T> Stream<T> queryStream(Class<T> dataType, List<IFilter> filters, QueryOptions options) {
-        TypedQuery<T> query = createQuery(entityManager, dataType, filters);
+    public <T> Stream<T> findByFilter(Class<T> dataType, List<IFilter> filters, QueryOptions options) {
+        RetrievalContext context = new RetrievalContext(entityManager, dataType);
+        TypedQuery<T> query = context.createQuery(filters, translateAssistant);
 
         if (options != null && options.getMaxSize() > 0) {
             query.setMaxResults((int) options.getMaxSize());
@@ -64,28 +62,20 @@ public class JpaAssistant implements IDbAssistant {
                 .stream();
     }
 
-    public <T> TypedQuery<T> createQuery(EntityManager entityManager, Class<T> dataType, List<IFilter> filterList) {
-        RetrievalContext<T> context = RetrievalContext.retrievalContext(entityManager, dataType);
-
-        return createQueryWithParam(filterList, entityManager, context);
+    @Override
+    public <T> T deleteById(Class<T> dataType, Object id) {
+        T data = entityManager.find(dataType, id);
+        if (data == null) {
+            return null;
+        }
+        entityManager.remove(data);
+        return data;
     }
 
-    private <T> TypedQuery createQueryWithParam(List<IFilter> filterList, EntityManager entityManager, ParameterContext<T, ?> context) {
-        List<Predicate> allPredicates = translateAssistant.translate(filterList, context);
-
-        if (!ListUtils.isEmpty(allPredicates)) {
-            context.getCriteriaQuery().where(allPredicates.toArray(new Predicate[allPredicates.size()]));
-        }
-        TypedQuery typeQuery = entityManager.createQuery(context.getCriteriaQuery());
-        fillAllParameterValues(typeQuery, context);
-        return typeQuery;
-    }
-
-    private void fillAllParameterValues(TypedQuery typeQuery, ParameterContext<?, ?> context) {
-        if (!ListUtils.isEmpty(context.getParameterList())) {
-            for (Pair<ParameterExpression, Object> parameterExpressionPair : context.getParameterList()) {
-                typeQuery.setParameter(parameterExpressionPair.getKey(), parameterExpressionPair.getValue());
-            }
-        }
+    @Override
+    public <T> long deleteByFilter(Class<T> dataType, List<IFilter> filters, QueryOptions options) {
+        DeleteContext context = new DeleteContext(entityManager, dataType);
+        Query query = context.createQuery(filters, translateAssistant);
+        return query.executeUpdate();
     }
 }
