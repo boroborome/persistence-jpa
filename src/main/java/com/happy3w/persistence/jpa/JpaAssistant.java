@@ -46,6 +46,11 @@ public class JpaAssistant implements IDbAssistant {
         dataStream.forEach(entityManager::merge);
     }
 
+    @Override
+    public <T> T findById(Class<T> dataType, Object id) {
+        return entityManager.find(dataType, id);
+    }
+
     @Transactional
     @Override
     public <T> Stream<T> queryStream(Class<T> dataType, List<IFilter> filters, QueryOptions options) {

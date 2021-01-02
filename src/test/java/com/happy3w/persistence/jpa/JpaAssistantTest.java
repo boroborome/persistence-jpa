@@ -62,12 +62,9 @@ public class JpaAssistantTest {
                 .catalog("CN")
                 .build());
 
-        List<CompanyEntity> results = assistant.queryStream(CompanyEntity.class, Arrays.asList(
-                new StringEqualFilter("id", "hw")
-        ), null)
-                .collect(Collectors.toList());
+        CompanyEntity result = assistant.findById(CompanyEntity.class,"hw");
 
-        Assert.assertEquals("HW-2", results.get(0).getName());
+        Assert.assertEquals("HW-2", result.getName());
     }
 
     @Test
