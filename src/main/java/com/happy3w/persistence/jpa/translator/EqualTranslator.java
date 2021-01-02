@@ -18,7 +18,7 @@ public class EqualTranslator
     }
 
     @Override
-    public Predicate translate(AbstractEqualFilter filter, ParameterContext<?, ?> context) {
+    public Predicate translate(AbstractEqualFilter filter, ITranslateAssistant translateAssistant, ParameterContext<?, ?> context) {
         CriteriaBuilder cb = context.getCriteriaBuilder();
 
         ParameterExpression<?> parameter = context.newParameter(filter.getRef());

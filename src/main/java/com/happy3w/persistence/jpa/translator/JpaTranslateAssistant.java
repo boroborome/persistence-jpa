@@ -30,6 +30,7 @@ public class JpaTranslateAssistant implements ITranslateAssistant {
         return this;
     }
 
+    @Override
     public List<Predicate> translate(List<IFilter> filterList, ParameterContext<?, ?> context) {
         if (ListUtils.isEmpty(filterList)) {
             return null;
@@ -41,16 +42,11 @@ public class JpaTranslateAssistant implements ITranslateAssistant {
             if (translator == null) {
                 throw new UnsupportedOperationException("Unsupported filter:" + filter.getClass());
             }
-            Predicate newPredicate = translator.translate(filter, context);
+            Predicate newPredicate = translator.translate(filter, this, context);
             if (newPredicate != null) {
                 allPredicates.add(newPredicate);
             }
         }
         return allPredicates;
-    }
-
-    @Override
-    public Predicate translatePositive(IFilter filter, ParameterContext<?, ?> context) {
-        return null;
     }
 }

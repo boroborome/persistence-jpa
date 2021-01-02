@@ -15,7 +15,7 @@ public class InTranslator extends AbstractFilterTranslator<AbstractInFilter> {
     }
 
     @Override
-    public Predicate translate(AbstractInFilter filter, ParameterContext<?, ?> context) {
+    public Predicate translate(AbstractInFilter filter, ITranslateAssistant translateAssistant, ParameterContext<?, ?> context) {
         CriteriaBuilder cb = context.getCriteriaBuilder();
 
         CriteriaBuilder.In in = cb.in(context.getRoot().get(filter.getField()));

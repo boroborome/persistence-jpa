@@ -18,7 +18,7 @@ public class LikeTranslator
     }
 
     @Override
-    public Predicate translate(StringLikeFilter filter, ParameterContext<?, ?> context) {
+    public Predicate translate(StringLikeFilter filter, ITranslateAssistant translateAssistant, ParameterContext<?, ?> context) {
         CriteriaBuilder cb = context.getCriteriaBuilder();
 
         ParameterExpression<String> parameter = context.newParameter("%" + filter.getRef() + "%");

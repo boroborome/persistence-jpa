@@ -15,7 +15,7 @@ public abstract class AbstractRangeTranslator<FT extends AbstractRangeFilter> ex
     }
 
     @Override
-    public Predicate translate(FT filter, ParameterContext<?, ?> context) {
+    public Predicate translate(FT filter, ITranslateAssistant translateAssistant, ParameterContext<?, ?> context) {
         CriteriaBuilder cb = context.getCriteriaBuilder();
 
         Path criteriaField = context.getRoot().get(filter.getField());

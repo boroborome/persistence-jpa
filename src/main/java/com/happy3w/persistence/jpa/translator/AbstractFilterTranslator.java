@@ -14,5 +14,5 @@ public abstract class AbstractFilterTranslator<FT extends IFilter> {
         this.filterType = filterType;
     }
 
-    public abstract Predicate translate(FT filter, ParameterContext<?, ?> context);
+    public abstract Predicate translate(FT filter, ITranslateAssistant translateAssistant, ParameterContext<?, ?> context);
 }

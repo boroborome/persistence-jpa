@@ -18,7 +18,7 @@ public class LikeInTranslator extends AbstractFilterTranslator<StringLikeInFilte
     }
 
     @Override
-    public Predicate translate(StringLikeInFilter filter, ParameterContext<?, ?> context) {
+    public Predicate translate(StringLikeInFilter filter, ITranslateAssistant translateAssistant, ParameterContext<?, ?> context) {
         CriteriaBuilder cb = context.getCriteriaBuilder();
 
         List<Predicate> likes = new ArrayList<>();
