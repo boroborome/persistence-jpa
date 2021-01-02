@@ -7,6 +7,7 @@ import com.github.springtestdbunit.dataset.ReplacementDataSetLoader;
 import com.happy3w.persistence.core.filter.impl.DateRangeFilter;
 import com.happy3w.persistence.core.filter.impl.MonthRangeFilter;
 import com.happy3w.persistence.core.filter.impl.StringEqualFilter;
+import com.happy3w.persistence.core.filter.impl.StringLikeFilter;
 import com.happy3w.persistence.jpa.app.TestApplication;
 import com.happy3w.persistence.jpa.app.entity.CompanyEntity;
 import lombok.AllArgsConstructor;
@@ -95,6 +96,19 @@ public class JpaAssistantTest {
                 .collect(Collectors.toList());
 
         Assert.assertEquals("[{\"catalog\":\"CN\",\"favoriteDate\":1593576000000,\"id\":\"hw\",\"name\":\"HW\"},{\"catalog\":\"AM\",\"favoriteDate\":1596254400000,\"id\":\"cs\",\"name\":\"CS\"}]",
+                JSON.toJSONString(dateResult));
+    }
+
+    @Test
+    public void should_query_by_like_success() {
+        givenDataConfigedDate();
+
+        List<CompanyEntity> dateResult = assistant.queryStream(CompanyEntity.class, Arrays.asList(
+                new StringLikeFilter("name", "C")
+        ), null)
+                .collect(Collectors.toList());
+
+        Assert.assertEquals("[{\"catalog\":\"AM\",\"favoriteDate\":1596254400000,\"id\":\"cs\",\"name\":\"CS\"},{\"catalog\":\"EN\",\"favoriteDate\":1598932800000,\"id\":\"sc\",\"name\":\"SC\"}]",
                 JSON.toJSONString(dateResult));
     }
 
