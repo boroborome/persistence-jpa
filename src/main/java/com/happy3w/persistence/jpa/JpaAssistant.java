@@ -36,14 +36,14 @@ public class JpaAssistant implements IDbAssistant {
     @Transactional
     @Override
     public <T> T saveData(T data) {
-        entityManager.persist(data);
+        entityManager.merge(data);
         return data;
     }
 
     @Transactional
     @Override
     public <T> void saveStream(Stream<T> dataStream) {
-        dataStream.forEach(entityManager::persist);
+        dataStream.forEach(entityManager::merge);
     }
 
     @Transactional

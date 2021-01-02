@@ -50,6 +50,27 @@ public class JpaAssistantTest {
     private JpaAssistant assistant;
 
     @Test
+    public void should_modify_success() {
+        assistant.saveData(CompanyEntity.builder()
+                .id("hw")
+                .name("HW")
+                .catalog("CN")
+                .build());
+        assistant.saveData(CompanyEntity.builder()
+                .id("hw")
+                .name("HW-2")
+                .catalog("CN")
+                .build());
+
+        List<CompanyEntity> results = assistant.queryStream(CompanyEntity.class, Arrays.asList(
+                new StringEqualFilter("id", "hw")
+        ), null)
+                .collect(Collectors.toList());
+
+        Assert.assertEquals("HW-2", results.get(0).getName());
+    }
+
+    @Test
     public void should_write_and_read_success() {
         assistant.saveData(CompanyEntity.builder()
                 .id("hw")
