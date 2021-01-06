@@ -62,6 +62,7 @@ public class JpaAssistant implements IDbAssistant<Object> {
                 .stream();
     }
 
+    @Transactional
     @Override
     public <T> T deleteById(Class<T> dataType, Object id) {
         T data = entityManager.find(dataType, id);
@@ -72,6 +73,7 @@ public class JpaAssistant implements IDbAssistant<Object> {
         return data;
     }
 
+    @Transactional
     @Override
     public <T> long deleteByFilter(Class<T> dataType, List<IFilter> filters, QueryOptions options) {
         DeleteContext context = new DeleteContext(entityManager, dataType);
