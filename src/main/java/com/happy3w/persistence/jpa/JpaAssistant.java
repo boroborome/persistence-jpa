@@ -50,7 +50,7 @@ public class JpaAssistant implements IDbAssistant<Object> {
 
     @Transactional
     @Override
-    public <T> Stream<T> findByFilter(Class<T> dataType, List<IFilter> filters, QueryOptions options) {
+    public <T> Stream<T> findByFilter(Class<T> dataType, List<? extends IFilter> filters, QueryOptions options) {
         RetrievalContext context = new RetrievalContext(entityManager, dataType);
         TypedQuery<T> query = context.createQuery(filters, translateAssistant);
 
@@ -75,7 +75,7 @@ public class JpaAssistant implements IDbAssistant<Object> {
 
     @Transactional
     @Override
-    public <T> long deleteByFilter(Class<T> dataType, List<IFilter> filters, QueryOptions options) {
+    public <T> long deleteByFilter(Class<T> dataType, List<? extends IFilter> filters, QueryOptions options) {
         DeleteContext context = new DeleteContext(entityManager, dataType);
         Query query = context.createQuery(filters, translateAssistant);
         return query.executeUpdate();
