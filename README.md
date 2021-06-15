@@ -8,4 +8,4 @@
 
 希望通过以上特性，实现增加条件的需求，只需要修改接口定义，从而将开发人员从繁琐的条件拼接活动中解脱出来。
 
-详细使用方法参见： [https://boroborome.github.io/handbook/persistence-jpa/](https://boroborome.github.io/handbook/persistence-jpa/)
+详细使用方法参见： [https://boroborome.github.io/handbook/persistence-jpa.html](https://boroborome.github.io/handbook/persistence-jpa.html)
