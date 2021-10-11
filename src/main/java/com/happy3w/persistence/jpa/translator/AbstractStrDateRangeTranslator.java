@@ -1,8 +1,8 @@
 package com.happy3w.persistence.jpa.translator;
 
+import com.happy3w.java.ext.StringUtils;
 import com.happy3w.persistence.core.filter.impl.AbstractStrDateRangeFilter;
 import com.happy3w.persistence.jpa.context.ParameterContext;
-import com.happy3w.toolkits.utils.StringUtils;
 import com.happy3w.toolkits.utils.ZoneIdCache;
 
 import java.time.LocalDateTime;

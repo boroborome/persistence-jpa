@@ -1,9 +1,9 @@
 package com.happy3w.persistence.jpa.translator;
 
+import com.happy3w.java.ext.ListUtils;
 import com.happy3w.persistence.core.filter.IFilter;
 import com.happy3w.persistence.jpa.context.ParameterContext;
 import com.happy3w.toolkits.manager.ConfigManager;
-import com.happy3w.toolkits.utils.ListUtils;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
