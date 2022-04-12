@@ -14,7 +14,6 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -57,9 +56,7 @@ public class JpaAssistant implements IDbAssistant<Object> {
         if (options != null && options.getMaxSize() > 0) {
             query.setMaxResults((int) options.getMaxSize());
         }
-        return query.getResultStream()
-                .collect(Collectors.toList())
-                .stream();
+        return query.getResultStream();
     }
 
     @Transactional
