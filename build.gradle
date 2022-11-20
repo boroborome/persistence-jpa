@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.happy3w'
-version = '1.0.0'
+version = '1.0.1'
 ext {
 	artifactId = "persistence-jpa"
 
@@ -18,7 +18,6 @@ apply plugin: 'java-library'
 sourceCompatibility = '1.8'
 
 repositories {
-	mavenLocal()
 	mavenCentral()
 }
 
