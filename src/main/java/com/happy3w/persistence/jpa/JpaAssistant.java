@@ -29,25 +29,21 @@ public class JpaAssistant implements IDbAssistant<Object> {
         this.entityManager = entityManager;
     }
 
-    @Transactional
     @Override
     public <T> T saveData(T data) {
         entityManager.merge(data);
         return data;
     }
 
-    @Transactional
     @Override
     public <T> void saveStream(Stream<T> dataStream) {
         dataStream.forEach(entityManager::merge);
     }
 
-    @Override
     public <T> T findById(Class<T> dataType, Object id) {
         return entityManager.find(dataType, id);
     }
 
-    @Transactional
     @Override
     public <T> Stream<T> findByFilter(Class<T> dataType, List<? extends IFilter> filters, QueryOptions options) {
         RetrievalContext context = new RetrievalContext(entityManager, dataType);
@@ -59,7 +55,6 @@ public class JpaAssistant implements IDbAssistant<Object> {
         return query.getResultStream();
     }
 
-    @Transactional
     @Override
     public <T> T deleteById(Class<T> dataType, Object id) {
         T data = entityManager.find(dataType, id);
@@ -70,7 +65,6 @@ public class JpaAssistant implements IDbAssistant<Object> {
         return data;
     }
 
-    @Transactional
     @Override
     public <T> long deleteByFilter(Class<T> dataType, List<? extends IFilter> filters, QueryOptions options) {
         DeleteContext context = new DeleteContext(entityManager, dataType);
