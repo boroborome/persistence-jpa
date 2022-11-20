@@ -52,7 +52,7 @@ public class JpaAssistant implements IDbAssistant<Object> {
         if (options != null && options.getMaxSize() > 0) {
             query.setMaxResults((int) options.getMaxSize());
         }
-        return query.getResultStream();
+        return query.getResultList().stream();
     }
 
     @Override
